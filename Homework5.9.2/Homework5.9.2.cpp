@@ -1,7 +1,4 @@
-﻿// Homework5.9.2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <cstdlib>
@@ -9,14 +6,15 @@
 class Big_integer
 {
 protected:
-    char* data;
+    std::string data = "";
 public:
+    std::string result;
     Big_integer()
     {
         std::cout << "class created" << std::endl;
     }
 
-    Big_integer(char* data)
+    Big_integer(std::string data)
     {
         this->data = data;
     }
@@ -35,14 +33,58 @@ public:
         delete& data;
     }
 
-    char operator ()(char* data)
-    {
-        this->data = data;
-    }
-
     Big_integer operator +(const Big_integer& other)
     {
-        return atoi(this->data) + atoi(other.data);
+        std::string rez;
+        std::string a = data;
+        std::string b = other.data;
+
+        int data_size = data.length();
+        int other_data_size = other.data.length();
+
+        if (other_data_size > data_size) 
+        {
+            rez = b;
+            for (int i = 0; i < (other_data_size - data_size); ++i)
+            {
+                a = '0' + a;
+            };
+        }
+        else if (other_data_size < data_size)
+        {
+            rez = a;
+            for (int i = 0; i < (data_size - other_data_size); ++i)
+            {
+                b = '0' + b;
+            };
+        }
+        else 
+        { 
+            rez = a; 
+        };
+
+        int rez_size = rez.length();
+        bool flag = false;
+        for (int i = rez_size - 1; i >= 0; --i)
+        {
+            rez[i] = a[i] + b[i] - 48;
+            if (flag)
+            {
+                rez[i]++;
+            };
+            if (rez[i] >= 58)
+            {
+                rez[i] -= 10;
+                rez[i - 1] = rez[i - 1] + 1; 
+                flag = true;
+            }
+            else 
+            { 
+                flag = false; 
+            }
+        }
+        result = rez;
+        return rez;
     }
 
     ~Big_integer() // деструктор
@@ -51,25 +93,18 @@ public:
     }
 };
 
+std::ostream& operator <<(std::ostream& os, const Big_integer& Bi)
+{
+    os << Bi.result;
+    return os;
+}
+
 int main(int argc, char** argv)
 {
     setlocale(LC_ALL, "Russian");
 
-    Big_integer big_integer;
-
-    auto number1 = big_integer("114575");
-    auto number2 = big_integer("78524");
+    auto number1 = Big_integer("114575");
+    auto number2 = Big_integer("78524");
     auto result = number1 + number2;
     std::cout << result; // 193099
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
