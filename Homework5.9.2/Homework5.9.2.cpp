@@ -8,7 +8,10 @@ class Big_integer
 protected:
     std::string data = "";
 public:
-    std::string result;
+    std::string get_data()
+    {
+        return data;
+    }
     Big_integer()
     {
         std::cout << "class created" << std::endl;
@@ -21,16 +24,17 @@ public:
 
     Big_integer(Big_integer&& other) noexcept : data(std::exchange(other.data, nullptr)) {} // конструктор перемещения
 
-    Big_integer(const Big_integer&& other) noexcept : Big_integer(other.data) {} // конструктор копирования
+    Big_integer(const Big_integer& other) noexcept : Big_integer(other.data) {} // конструктор копирования
 
     Big_integer& operator =(const Big_integer& other) // оператор копирующего присваивания
     {
-        delete &data;
+        return *this = Big_integer(other);
     }
 
     Big_integer& operator =(Big_integer&& other) noexcept // оператор перемещающего присваивания
     {
-        delete& data;
+        std::swap(data, other.data);
+        return *this;
     }
 
     Big_integer operator +(const Big_integer& other)
@@ -83,7 +87,7 @@ public:
                 flag = false; 
             }
         }
-        result = rez;
+        data = rez;
         return rez;
     }
 
@@ -93,9 +97,9 @@ public:
     }
 };
 
-std::ostream& operator <<(std::ostream& os, const Big_integer& Bi)
+std::ostream& operator <<(std::ostream& os, Big_integer& Bi)
 {
-    os << Bi.result;
+    os << Bi.get_data() << std::endl;
     return os;
 }
 
