@@ -22,7 +22,7 @@ public:
         this->data = data;
     }
 
-    Big_integer(Big_integer&& other) noexcept : data(std::exchange(other.data, nullptr)) {} // конструктор перемещения
+    Big_integer(Big_integer&& other) noexcept : data(std::exchange(other.data, "")) {} // конструктор перемещения
 
     Big_integer(const Big_integer& other) noexcept : Big_integer(other.data) {} // конструктор копирования
 
@@ -87,7 +87,6 @@ public:
                 flag = false; 
             }
         }
-        data = rez;
         return rez;
     }
 
